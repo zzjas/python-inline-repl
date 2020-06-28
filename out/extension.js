@@ -1,13 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deactivate = exports.activate = exports.pythonSelector = void 0;
+exports.deactivate = exports.activate = void 0;
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require("vscode");
 const repl_1 = require("./repl");
-exports.pythonSelector = [
-    { language: 'python', scheme: 'file' }
-];
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
@@ -24,7 +21,7 @@ function activate(context) {
     });
     vscode.window.showInformationMessage('Start pushing subs python-inline-repl!');
     context.subscriptions.push(disposable);
-    context.subscriptions.push(vscode.languages.registerCodeLensProvider(exports.pythonSelector, { provideCodeLenses: repl_1.provideCodeLenses }));
+    repl_1.registerInlineRepl(context);
 }
 exports.activate = activate;
 // this method is called when your extension is deactivated
