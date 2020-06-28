@@ -19,7 +19,6 @@ function activate(context) {
         // Display a message box to the user
         vscode.window.showInformationMessage('Hello World from python-inline-repl!');
     });
-    vscode.window.showInformationMessage('Start pushing subs python-inline-repl!');
     context.subscriptions.push(disposable);
     repl_1.registerInlineRepl(context);
 }

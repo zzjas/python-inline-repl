@@ -22,7 +22,6 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Hello World from python-inline-repl!');
 	});
 
-    vscode.window.showInformationMessage('Start pushing subs python-inline-repl!');
     context.subscriptions.push(disposable);
     registerInlineRepl(context);
 }

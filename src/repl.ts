@@ -109,6 +109,11 @@ export function registerInlineRepl(context: vscode.ExtensionContext) {
 
         const scriptExecution = spawn(pythonPath, ["-i", filePath]);
 
+        scriptExecution.stderr.on('data', async data => {
+            const s = String.fromCharCode.apply(null, data);
+            console.debug("From stderr: " + s);
+        });
+
         scriptExecution.stdout.on('data', async (data) => {
             const s = String.fromCharCode.apply(null, data);
             console.debug("From data: " + s);
@@ -163,6 +168,7 @@ export function registerInlineRepl(context: vscode.ExtensionContext) {
                 codeLenses.push(
                     new vscode.CodeLens(
                         document.lineAt(headerRange.start.line).range, command));
+                console.debug("Pushed lense for: " + res.commands[0]);
             }
         }
         availableRepl.set(document, available);

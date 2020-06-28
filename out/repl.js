@@ -90,6 +90,10 @@ function registerInlineRepl(context) {
             console.debug("Command is: " + commands[0]);
             console.debug("PythonPath is: " + pythonPath);
             const scriptExecution = child_process_1.spawn(pythonPath, ["-i", filePath]);
+            scriptExecution.stderr.on('data', (data) => __awaiter(this, void 0, void 0, function* () {
+                const s = String.fromCharCode.apply(null, data);
+                console.debug("From stderr: " + s);
+            }));
             scriptExecution.stdout.on('data', (data) => __awaiter(this, void 0, void 0, function* () {
                 const s = String.fromCharCode.apply(null, data);
                 console.debug("From data: " + s);
@@ -131,6 +135,7 @@ function registerInlineRepl(context) {
                     };
                     available.push([headerRange, command]);
                     codeLenses.push(new vscode.CodeLens(document.lineAt(headerRange.start.line).range, command));
+                    console.debug("Pushed lense for: " + res.commands[0]);
                 }
             }
             availableRepl.set(document, available);

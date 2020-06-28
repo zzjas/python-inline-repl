@@ -1,65 +1,26 @@
-# python-inline-repl README
+# Python-Inline-Repl
 
-This is the README for your extension "python-inline-repl". After writing up a brief description, we recommend including the following sections.
+Inspired by the inline-repl feature from [Simple GHC (Haskell) Integration for VSCode](https://github.com/dramforever/vscode-ghc-simple), the extension python-inline-repl
+can run Python codes within comments and preserve the result in your file.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+You can use variables and functions defined in your file.
 
-For example if there is an image subfolder under your extension project workspace:
+![foo-bar](./media/foo-bar.gif)
 
-\!\[feature X\]\(images/feature-x.png\)
+![times-two-for-all](./media/times-two-for-all.gif)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+You can re-run the code after modification to overwrite the result.
 
-## Requirements
+![two-to-three](./media/two-to-three.gif)
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+You can write the spec for a function using examples.
 
-## Extension Settings
+![exercise](./media/exercise.gif)
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## Usage
 
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+Just enabel the extension and open a Python file!
 
 **Enjoy!**
