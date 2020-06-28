@@ -83,57 +83,14 @@ function registerInlineRepl(context) {
                 return;
             const { outputRange, commands, prefix } = res;
             const response = ["Response from running: " + commands];
-            const replacement = generateReplacement(response, outputRange, prefix);
-            yield textEditor.edit(e => e.replace(outputRange, replacement), { undoStopBefore: !arg.batch, undoStopAfter: !arg.batch });
+            yield printReplacement(textEditor, response, outputRange, prefix);
             isRunning.flag = false;
-            // if (typeof arg === 'undefined') {
-            //     if (! availableRepl.has(textEditor.document)) return;
-            //     for (const [ hr, cmd ] of availableRepl.get(textEditor.document))
-            //         if (hr.contains(textEditor.selection) && cmd.arguments[0]) {
-            //             await inlineReplRun(textEditor, edit, cmd.arguments[0]);
-            //             break;
-            //         }
-            // } else {
-            //     const { headerLineNum, isRunning } = arg;
-            //     if (isRunning.flag) return;
-            //     isRunning.flag = true;
-            //     try {
-            //         const [ , res ] = parseReplBlockAt(textEditor.document, headerLineNum);
-            //         if (res === null) return;
-            //         const { outputRange, commands, prefix } = res;
-            //         const session = await startSession(ext, textEditor.document);
-            //         await session.loading;
-            //         let loadType : 'byte-code' | 'object-code' =
-            //             vscode.workspace.getConfiguration(
-            //                 'ghcSimple.inlineRepl', textEditor.document.uri
-            //             ).loadType;
-            //         const extraLoadCommands = [];
-            //         if (commands[0].match(/^\s*:set/)) {
-            //             extraLoadCommands.push(commands.shift());
-            //         }
-            //         const messages = await session.ghci.sendCommand([
-            //             `:set -f${loadType}`,
-            //             ... extraLoadCommands,
-            //             ':reload'
-            //         ], { info: 'Reloading' });
-            //         if (messages.some(x => x.startsWith('Failed'))) {
-            //             const msgs = [
-            //                 '(Error while loading modules for evaluation)',
-            //                 ...messages
-            //             ];
-            //             const replacement = generateReplacement(msgs, outputRange, prefix);
-            //             await textEditor.edit(e => e.replace(outputRange, replacement),
-            //                 { undoStopBefore: ! arg.batch, undoStopAfter: ! arg.batch });
-            //             return;
-            //         }
-            //         const response = await session.ghci.sendCommand(commands, { info: 'Running in REPL' });
-            //         const replacement = generateReplacement(response, outputRange, prefix);
-            //         await textEditor.edit(e => e.replace(outputRange, replacement),
-            //             { undoStopBefore: ! arg.batch, undoStopAfter: ! arg.batch });
-            //     } finally {
-            //         isRunning.flag = false;
-            //     }
-            // }
+        });
+    }
+    function printReplacement(textEditor, response, outputRange, prefix) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const replacement = generateReplacement(response, outputRange, prefix);
+            yield textEditor.edit(e => e.replace(outputRange, replacement));
         });
     }
     context.subscriptions.push(vscode.commands.registerTextEditorCommand('python-inline-repl.inline-repl-run', (textEditor, edit, arg) => {

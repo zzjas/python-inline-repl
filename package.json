@@ -10,7 +10,7 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onLanguage:python",
+		"onLanguage:python",
 		"onCommand:python-inline-repl.helloWorld"
 	],
 	"main": "./out/extension.js",
@@ -42,5 +42,6 @@
 		"mocha": "^7.1.2",
 		"typescript": "^3.8.3",
 		"vscode-test": "^1.3.0"
-	}
+	},
+	"dependencies": {}
 }
