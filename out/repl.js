@@ -11,6 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerInlineRepl = void 0;
 const vscode = require("vscode");
+const python_shell_1 = require("python-shell");
+const child_process_1 = require("child_process");
 function reportError(msg) {
     return (err) => {
         console.error(`${msg}: ${err}`);
@@ -82,15 +84,25 @@ function registerInlineRepl(context) {
             if (!res)
                 return;
             const { outputRange, commands, prefix } = res;
-            const response = ["Response from running: " + commands];
-            yield printReplacement(textEditor, response, outputRange, prefix);
-            isRunning.flag = false;
-        });
-    }
-    function printReplacement(textEditor, response, outputRange, prefix) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const replacement = generateReplacement(response, outputRange, prefix);
-            yield textEditor.edit(e => e.replace(outputRange, replacement));
+            const pythonPath = python_shell_1.PythonShell.defaultPythonPath;
+            const filePath = textEditor.document.isUntitled ? "" : textEditor.document.fileName;
+            console.debug("Running " + filePath + " in PythonShell");
+            console.debug("Command is: " + commands[0]);
+            console.debug("PythonPath is: " + pythonPath);
+            const scriptExecution = child_process_1.spawn(pythonPath, ["-i", filePath]);
+            scriptExecution.stdout.on('data', (data) => __awaiter(this, void 0, void 0, function* () {
+                const s = String.fromCharCode.apply(null, data);
+                console.debug("From data: " + s);
+                const response = s.split('\n');
+                const replacement = generateReplacement(response, outputRange, prefix);
+                yield textEditor.edit(e => e.replace(outputRange, replacement));
+                scriptExecution.stdin.write('quit()\n');
+                isRunning.flag = false;
+            }));
+            scriptExecution.on("close", code => {
+                console.debug("python closed");
+            });
+            scriptExecution.stdin.write(commands[0].trim() + '\n');
         });
     }
     context.subscriptions.push(vscode.commands.registerTextEditorCommand('python-inline-repl.inline-repl-run', (textEditor, edit, arg) => {

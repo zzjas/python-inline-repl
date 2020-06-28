@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import {PythonShell} from 'python-shell';
+import { spawn } from 'child_process';
 
 function reportError( msg: string) {
     return (err : string) => {
@@ -98,19 +100,30 @@ export function registerInlineRepl(context: vscode.ExtensionContext) {
         if(!res) return;
         const { outputRange, commands, prefix } = res;
 
-        const response = ["Response from running: " + commands];
-        await printReplacement(textEditor, response, outputRange, prefix);
-        isRunning.flag = false;
+        const pythonPath = PythonShell.defaultPythonPath;
+        const filePath = textEditor.document.isUntitled ? "" : textEditor.document.fileName;
+        console.debug("Running " + filePath + " in PythonShell");
 
-    }
+        console.debug("Command is: " + commands[0]);
+        console.debug("PythonPath is: " + pythonPath);
 
-    async function printReplacement(
-        textEditor : vscode.TextEditor,
-        response : string[],
-        outputRange : vscode.Range,
-        prefix : string) {
-        const replacement = generateReplacement(response, outputRange, prefix);
-        await textEditor.edit(e => e.replace(outputRange, replacement));
+        const scriptExecution = spawn(pythonPath, ["-i", filePath]);
+
+        scriptExecution.stdout.on('data', async (data) => {
+            const s = String.fromCharCode.apply(null, data);
+            console.debug("From data: " + s);
+            const response = s.split('\n');
+            const replacement = generateReplacement(response, outputRange, prefix);
+            await textEditor.edit(e => e.replace(outputRange, replacement));
+            scriptExecution.stdin.write('quit()\n');
+            isRunning.flag = false;
+        });
+        scriptExecution.on("close", code => {
+            console.debug("python closed");
+        });
+        scriptExecution.stdin.write(commands[0].trim() + '\n');
+
+
     }
 
     context.subscriptions.push(
